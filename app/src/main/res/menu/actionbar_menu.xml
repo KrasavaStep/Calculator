@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
+    <item
+        android:id="@+id/change_theme"
+        android:title="@string/actionbar_menu1"
+        app:showAsAction="never"
+        />
+    <item
+        android:id="@+id/change_language"
+        android:title="@string/actionbar_menu2"
+        app:showAsAction="never"
+        />
+</menu>

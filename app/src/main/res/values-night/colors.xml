@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="output_area">#38393d</color>
+    <color name="buttons_area">#1f1f1f</color>
+    <color name="digits_btns">#434447</color>
+    <color name="decide_btns">#5D958D</color>
+    <color name="clear_btn">#739E5E</color>
+    <color name="equals_btn">#7478AF</color>
+    <color name="text">#c4e7fa</color>
+
+</resources>
