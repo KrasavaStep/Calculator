@@ -1,6 +1,5 @@
 package com.example.calculator.view
 
-import android.app.Application
 import com.example.calculator.app.ResourceProvider
 import com.example.calculator.base.ViewModelFactory
 import com.example.calculator.data.Repository

@@ -8,4 +8,10 @@
 
     <string name="divide_by_zero">Деление на ноль</string>
     <string name="error">Ошибка</string>
+    <string name="night_mode">Тёмная тема</string>
+    <string name="light_mode">Светлая тема</string>
+    <string name="positive_btn">OK</string>
+    <string name="negative_btn">Отмена</string>
+    <string name="en">Английский</string>
+    <string name="ru">Русский</string>
 </resources>

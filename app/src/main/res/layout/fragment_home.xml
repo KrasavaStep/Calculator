@@ -15,11 +15,23 @@
         android:background="@color/output_area"
         android:orientation="vertical">
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="0.5" />
+            android:layout_weight="0.4"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/theme_btn"
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:layout_alignParentEnd="true"
+                android:layout_marginVertical="12dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/oval_btn"
+                android:src="@drawable/ic_baseline_color_lens_24" />
+
+        </RelativeLayout>
 
 
         <androidx.appcompat.widget.AppCompatTextView

@@ -1,16 +1,29 @@
 package com.example.calculator.view
 
+import android.app.AlertDialog
 import android.content.Context
+import android.content.DialogInterface
+import android.content.res.Resources
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import androidx.fragment.app.Fragment
 import android.view.View
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.ViewModelProvider
 import com.example.calculator.R
 import com.example.calculator.app.App
-import com.example.calculator.databinding.FragmentHomeBinding
 import javax.inject.Inject
+import com.example.calculator.app.DIVISION_BY_ZERO_KEY
+import com.example.calculator.app.ERROR_KEY
+import com.example.calculator.databinding.FragmentHomeBinding
+import java.util.*
+
+private const val TEXT_KEY = "saved_text"
+private const val DIALOG_KEY = "is_showing_dialog"
 
 class HomeFragment : Fragment(R.layout.fragment_home) {
 
@@ -25,22 +38,64 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
     private var textChanged = ""
 
+    private var isShowingDialog = false
+
+    private var themeDialog: AlertDialog? = null
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putString(TEXT_KEY, binding.currentExpression.text.toString())
+        outState.putBoolean(DIALOG_KEY, isShowingDialog)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setHasOptionsMenu(true)
         _binding = FragmentHomeBinding.bind(view)
+
+        val savedTextValue = savedInstanceState?.getString(TEXT_KEY)
+
+        if (savedTextValue != null) {
+            binding.currentExpression.text = savedTextValue
+            isShowingDialog = savedInstanceState.getBoolean(DIALOG_KEY, false);
+            if (isShowingDialog) {
+                createThemeDialog()
+            }
+        }
+
+        viewModel.getThemeCode()
+        viewModel.themeLiveData.observe(viewLifecycleOwner) {
+            if (it == 0)
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            else
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+        }
 
         binding.apply {
             clearTextBtn.setOnClickListener {
-                currentExpression.text = ""
-                viewModel.clearSavedValue()
+//                currentExpression.text = ""
+//                viewModel.clearSavedValue()
+                createThemeDialog()
             }
             backspaceBtn.setOnClickListener {
-                currentExpression.text =
-                    currentExpression.text.replaceFirst(".$".toRegex(), "")
+                if (currentExpression.text == DIVISION_BY_ZERO_KEY ||
+                    currentExpression.text == ERROR_KEY
+                )
+                    currentExpression.text = ""
+                else
+                    currentExpression.text =
+                        currentExpression.text.replaceFirst(".$".toRegex(), "")
             }
-            rightBracket.setOnClickListener { currentExpression.append("(") }
-            leftBracket.setOnClickListener { currentExpression.append(")") }
+            rightBracket.setOnClickListener {
+                checkTextField()
+                currentExpression.append("(")
+            }
+            leftBracket.setOnClickListener {
+                checkTextField()
+                currentExpression.append(")")
+            }
             divide.setOnClickListener {
+                checkTextField()
                 viewModel.checkSign(currentExpression.text.toString(), '/')
                 viewModel.signLiveData.observe(viewLifecycleOwner) {
                     currentExpression.text = ""
@@ -48,6 +103,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 }
             }
             multiply.setOnClickListener {
+                checkTextField()
                 viewModel.checkSign(currentExpression.text.toString(), '*')
                 viewModel.signLiveData.observe(viewLifecycleOwner) {
                     currentExpression.text = ""
@@ -55,6 +111,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 }
             }
             substraction.setOnClickListener {
+                checkTextField()
                 viewModel.checkSign(currentExpression.text.toString(), '-')
                 viewModel.signLiveData.observe(viewLifecycleOwner) {
                     currentExpression.text = ""
@@ -62,6 +119,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 }
             }
             addition.setOnClickListener {
+                checkTextField()
                 viewModel.checkSign(currentExpression.text.toString(), '+')
                 viewModel.signLiveData.observe(viewLifecycleOwner) {
                     currentExpression.text = ""
@@ -69,6 +127,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 }
             }
             dotBtn.setOnClickListener {
+                checkTextField()
                 viewModel.checkSign(currentExpression.text.toString(), '.')
                 viewModel.signLiveData.observe(viewLifecycleOwner) {
                     currentExpression.text = ""
@@ -82,16 +141,46 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                     currentExpression.text = it
                 }
             }
-            oneBtn.setOnClickListener { currentExpression.append("1") }
-            twoBtn.setOnClickListener { currentExpression.append("2") }
-            threeBtn.setOnClickListener { currentExpression.append("3") }
-            fourBtn.setOnClickListener { currentExpression.append("4") }
-            fiveBtn.setOnClickListener { currentExpression.append("5") }
-            sixBtn.setOnClickListener { currentExpression.append("6") }
-            sevenBtn.setOnClickListener { currentExpression.append("7") }
-            eightBtn.setOnClickListener { currentExpression.append("8") }
-            nineBtn.setOnClickListener { currentExpression.append("9") }
-            zeroBtn.setOnClickListener { currentExpression.append("0") }
+            oneBtn.setOnClickListener {
+                checkTextField()
+                currentExpression.append("1")
+            }
+            twoBtn.setOnClickListener {
+                checkTextField()
+                currentExpression.append("2")
+            }
+            threeBtn.setOnClickListener {
+                checkTextField()
+                currentExpression.append("3")
+            }
+            fourBtn.setOnClickListener {
+                checkTextField()
+                currentExpression.append("4")
+            }
+            fiveBtn.setOnClickListener {
+                checkTextField()
+                currentExpression.append("5")
+            }
+            sixBtn.setOnClickListener {
+                checkTextField()
+                currentExpression.append("6")
+            }
+            sevenBtn.setOnClickListener {
+                checkTextField()
+                currentExpression.append("7")
+            }
+            eightBtn.setOnClickListener {
+                checkTextField()
+                currentExpression.append("8")
+            }
+            nineBtn.setOnClickListener {
+                checkTextField()
+                currentExpression.append("9")
+            }
+            zeroBtn.setOnClickListener {
+                checkTextField()
+                currentExpression.append("0")
+            }
         }
 
         binding.currentExpression.doOnTextChanged { text, start, before, count ->
@@ -99,6 +188,10 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 textChanged = text.toString()
                 viewModel.saveValue(textChanged)
             }
+        }
+
+        binding.themeBtn.setOnClickListener {
+            createThemeDialog()
         }
 
         viewModel.getSavedValue()
@@ -113,4 +206,54 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         viewModel = ViewModelProvider(this, viewModelProvider)[CalculatorViewModel::class.java]
     }
 
+    private fun checkTextField() {
+        binding.apply {
+            if (currentExpression.text == DIVISION_BY_ZERO_KEY ||
+                currentExpression.text == ERROR_KEY
+            )
+                currentExpression.text = ""
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        if (themeDialog != null && themeDialog?.isShowing!!) {
+            themeDialog?.dismiss()
+        }
+    }
+
+    private fun createThemeDialog() {
+        val builder = AlertDialog.Builder(context)
+        builder.setTitle(R.string.actionbar_menu1)
+        val items = arrayOf(getString(R.string.light_mode), getString(R.string.night_mode))
+        viewModel.getThemeCode()
+        viewModel.themeLiveData.observe(viewLifecycleOwner) {
+            var checkedItem = it
+            builder.setSingleChoiceItems(items, checkedItem) { dialog, which ->
+                when (which) {
+                    0 -> checkedItem = 0
+                    1 -> checkedItem = 1
+                }
+            }
+            builder.setNegativeButton(getText(R.string.negative_btn)) { dialog, i ->
+                dialog.dismiss()
+                isShowingDialog = false
+            }
+            builder.setPositiveButton(getText(R.string.positive_btn)) { dialog, i ->
+                dialog.dismiss()
+                isShowingDialog = false
+                viewModel.saveTheme(checkedItem)
+                if (checkedItem == 0)
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                else
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            }
+
+            themeDialog = builder.create()
+            themeDialog?.setCanceledOnTouchOutside(false)
+            themeDialog?.show()
+            isShowingDialog = true
+        }
+    }
 }
+

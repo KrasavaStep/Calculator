@@ -4,14 +4,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.calculator.R
+import com.example.calculator.app.DIVISION_BY_ZERO_KEY
+import com.example.calculator.app.ERROR_KEY
+import com.example.calculator.app.EMPTY_KEY
+import com.example.calculator.app.ONLY_DIGIT_KEY
 import com.example.calculator.app.ResourceProvider
 import com.example.calculator.data.Repository
 import java.util.*
 
-private const val DIVISION_BY_ZERO_KEY = "dbz"
-private const val ERROR_KEY = "error"
-private const val EMPTY_KEY = "empty"
-private const val ONLY_DIGIT = "only_digit"
 
 class CalculatorViewModel(
     private val repository: Repository,
@@ -27,6 +27,13 @@ class CalculatorViewModel(
     private val _signLiveData = MutableLiveData<String>()
     val signLiveData: LiveData<String> = _signLiveData
 
+    private val _themeLiveData = MutableLiveData<Int>()
+    val themeLiveData: LiveData<Int> = _themeLiveData
+
+    private val _lanLiveData = MutableLiveData<Int>()
+    val lanLiveData: LiveData<Int> = _lanLiveData
+
+    //evaluates expression, precuts errors
     fun performCalculation(expression: String) {
         var finalAnswer = ""
 
@@ -35,7 +42,7 @@ class CalculatorViewModel(
             DIVISION_BY_ZERO_KEY -> resourceProvider.getString(R.string.divide_by_zero)
             ERROR_KEY -> resourceProvider.getString(R.string.error)
             EMPTY_KEY -> expression
-            ONLY_DIGIT -> expression
+            ONLY_DIGIT_KEY -> expression
             else -> {
                 val rpn = expressionToRPN(preparedExpression)
                 val answer = rpnToAnswer(rpn)
@@ -46,6 +53,8 @@ class CalculatorViewModel(
         repository.saveLastValue(finalAnswer)
     }
 
+    //checks whether it is worth leaving the Double type in the output, or whether it
+    //is possible to truncate the characters after the dot
     private fun checkAnswer(answer: Double): String {
         val fractionalPart = answer.toString().substringAfter('.')
         return if (fractionalPart.length == 1 && fractionalPart.toInt() == 0)
@@ -53,6 +62,7 @@ class CalculatorViewModel(
         else answer.toString()
     }
 
+    //prepares expression for RPN
     private fun prepareExpression(expression: String): String {
         var preparedExpression = ""
         var index = 0
@@ -60,7 +70,7 @@ class CalculatorViewModel(
         if (expression.isEmpty()) return EMPTY_KEY
 
         if (!expression.contains(Regex("""[+\-*/().]"""))) {
-            return ONLY_DIGIT
+            return ONLY_DIGIT_KEY
         }
 
         if (expression.substringAfter('/').isNotEmpty() &&
@@ -104,6 +114,7 @@ class CalculatorViewModel(
         return preparedExpression
     }
 
+    // casts expression to RPN(Reverse Poland Notation)
     private fun expressionToRPN(expression: String): String {
         var current = ""
         val stack: Stack<Char> = Stack<Char>()
@@ -141,6 +152,7 @@ class CalculatorViewModel(
         return current
     }
 
+    //casts RPN to answer in Double format
     private fun rpnToAnswer(rpn: String): Double {
         var operand = ""
         val stack: Stack<Double> = Stack<Double>()
@@ -176,6 +188,7 @@ class CalculatorViewModel(
         return stack.pop()
     }
 
+    //calculate priority for operator
     private fun getPriority(token: Char): Int {
         return if (token == '*' || token == '/') 3
         else if (token == '+' || token == '-') 2
@@ -196,6 +209,7 @@ class CalculatorViewModel(
         repository.saveLastValue(text)
     }
 
+    //checkSign and placeSign need for prevent errors with operators in the incoming expression
     fun checkSign(expression: String, sign: Char) {
         when (sign) {
             '-' -> {
@@ -267,5 +281,12 @@ class CalculatorViewModel(
             return expr
         }
         return expr
+    }
+
+    fun getThemeCode(){
+        _themeLiveData.value = repository.getTheme()
+    }
+    fun saveTheme(themeCode: Int){
+        repository.saveTheme(themeCode)
     }
 }

@@ -7,4 +7,10 @@
 
     <string name="divide_by_zero">Division by zero</string>
     <string name="error">Error</string>
+    <string name="night_mode">Dark mode</string>
+    <string name="light_mode">Light mode</string>
+    <string name="positive_btn">OK</string>
+    <string name="negative_btn">Cancel</string>
+    <string name="en">English</string>
+    <string name="ru">Russian</string>
 </resources>

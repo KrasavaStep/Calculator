@@ -15,18 +15,10 @@
         android:background="@color/output_area"
         android:orientation="vertical">
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="0.5" />
-
-
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/current_expression"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_height="match_parent"
             android:padding="10dp"
             android:textAlignment="textEnd"
             android:textColor="@color/text"
@@ -275,10 +267,21 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_margin="5dp"
-                android:layout_weight="1"
+                android:layout_weight="0.9"
                 android:background="@color/equals_btn"
                 android:text="="
                 android:textSize="30sp" />
+
+            <ImageButton
+                android:id="@+id/theme_btn"
+                android:layout_width="35dp"
+                android:layout_height="match_parent"
+                android:layout_alignParentEnd="true"
+                android:layout_marginVertical="7dp"
+                android:layout_marginEnd="10dp"
+                android:layout_weight="0.1"
+                android:background="@drawable/oval_btn"
+                android:src="@drawable/ic_baseline_color_lens_24" />
 
         </TableRow>
 
