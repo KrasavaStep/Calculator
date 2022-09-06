@@ -4,4 +4,8 @@
     <string name="app_name">Калькулятор</string>
     <string name="actionbar_menu1">Выбрать тему</string>
     <string name="actionbar_menu2">Выбрать язык</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="divide_by_zero">Деление на ноль</string>
+    <string name="error">Ошибка</string>
 </resources>

@@ -5,6 +5,7 @@ import javax.inject.Inject
 
 private const val SHARED_PREFERENCES_VALUE_NAME = "sp_value"
 private const val KEY_VALUE = "key_value"
+private const val EMPTY_VALUE = ""
 
 class RepositoryImpl @Inject constructor(context: Context) : Repository {
 
@@ -17,5 +18,9 @@ class RepositoryImpl @Inject constructor(context: Context) : Repository {
 
     override fun getValue(): String {
         return sharedPreferences.getString(KEY_VALUE, "") ?: ""
+    }
+
+    override fun clearValue() {
+        sharedPreferences.edit().putString(KEY_VALUE, EMPTY_VALUE).apply()
     }
 }
