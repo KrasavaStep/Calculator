@@ -1,6 +1,6 @@
 package com.example.calculator.di
 
-import com.example.calculator.HomeFragment
+import com.example.calculator.view.HomeFragment
 import dagger.Component
 import javax.inject.Singleton
 

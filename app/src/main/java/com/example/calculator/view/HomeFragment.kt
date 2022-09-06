@@ -1,17 +1,13 @@
-package com.example.calculator
+package com.example.calculator.view
 
 import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
+import com.example.calculator.R
 import com.example.calculator.app.App
-import com.example.calculator.databinding.ActivityMainBinding.bind
 import com.example.calculator.databinding.FragmentHomeBinding
-import com.example.calculator.view.CalculatorViewModel
-import com.example.calculator.view.CalculatorViewModelProvider
 import javax.inject.Inject
 
 class HomeFragment : Fragment(R.layout.fragment_home) {
