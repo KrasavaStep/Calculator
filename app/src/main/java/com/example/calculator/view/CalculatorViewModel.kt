@@ -30,9 +30,6 @@ class CalculatorViewModel(
     private val _themeLiveData = MutableLiveData<Int>()
     val themeLiveData: LiveData<Int> = _themeLiveData
 
-    private val _lanLiveData = MutableLiveData<Int>()
-    val lanLiveData: LiveData<Int> = _lanLiveData
-
     //evaluates expression, precuts errors
     fun performCalculation(expression: String) {
         var finalAnswer = ""
