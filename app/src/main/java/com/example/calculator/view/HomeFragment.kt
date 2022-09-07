@@ -2,13 +2,8 @@ package com.example.calculator.view
 
 import android.app.AlertDialog
 import android.content.Context
-import android.content.DialogInterface
-import android.content.res.Resources
 import android.os.Bundle
 import android.util.Log
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
 import androidx.fragment.app.Fragment
 import android.view.View
 import androidx.appcompat.app.AppCompatDelegate
@@ -20,7 +15,6 @@ import javax.inject.Inject
 import com.example.calculator.app.DIVISION_BY_ZERO_KEY
 import com.example.calculator.app.ERROR_KEY
 import com.example.calculator.databinding.FragmentHomeBinding
-import java.util.*
 
 private const val TEXT_KEY = "saved_text"
 private const val DIALOG_KEY = "is_showing_dialog"
@@ -73,9 +67,8 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
         binding.apply {
             clearTextBtn.setOnClickListener {
-//                currentExpression.text = ""
-//                viewModel.clearSavedValue()
-                createThemeDialog()
+                currentExpression.text = ""
+                viewModel.clearSavedValue()
             }
             backspaceBtn.setOnClickListener {
                 if (currentExpression.text == DIVISION_BY_ZERO_KEY ||
