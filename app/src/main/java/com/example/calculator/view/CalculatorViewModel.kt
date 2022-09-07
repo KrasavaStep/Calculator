@@ -78,15 +78,15 @@ class CalculatorViewModel(
         ) {
             return DIVISION_BY_ZERO_KEY
         }
-        if ((expression.substringBefore('(').last() == '*' ||
-                    expression.substringBefore('(')
-                        .last() == '/') && expression.substringBefore('(').isNotEmpty()
+        if (expression.substringBefore('(').isNotEmpty() &&
+            (expression.substringBefore('(').last() == '*' ||
+                    expression.substringBefore('(').last() == '/')
         ) {
             return ERROR_KEY
         }
-        if ((expression.substringAfter('(').first() == '*' ||
-                    expression.substringAfter('(')
-                        .first() == '/') && expression.substringAfter('(').isNotEmpty()
+        if (expression.substringAfter('(').isNotEmpty() &&
+            (expression.substringAfter('(').first() == '*' ||
+                    expression.substringAfter('(').first() == '/')
         ) {
             return ERROR_KEY
         }
@@ -94,9 +94,15 @@ class CalculatorViewModel(
             && getPriority(expression.substringBefore(')').last()) > 1
         ) return ERROR_KEY
 
-        if (expression.substringAfter(')').isNotEmpty() &&
-            getPriority(expression.substringAfter(')').first()) > 1
+        if (expression.substringAfter('(').isNotEmpty() &&
+            getPriority(expression.substringAfter('(').first()) > 1
         ) return ERROR_KEY
+
+        if (expression.substringBefore('(').isNotEmpty() &&
+            !expression.contains(Regex("""[0-9]""")) &&
+            getPriority(expression.substringBefore('(').last()) > 1){
+            return ERROR_KEY
+        }
 
         while (index < expression.length) {
             if (expression[index] == '-' || expression[index] == '+') {
